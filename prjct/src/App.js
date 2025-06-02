@@ -36,17 +36,20 @@ function App() {
 
   const initGame = () => {
     const pairs = (gridSize * gridSize) / 2;
-
+    console.log(gridSize);
     const selectedEmoji = cardEmojies.slice(0, pairs);
 
     const cardPairs = [...selectedEmoji, ...selectedEmoji];
+    console.log(cardPairs);
     const suflCards = cardPairs
-        .sort(() =>Math.random() - 0.5)
-        .map((emodji, index) =>({
+        .sort(() =>Math.random() - 0.5);
+    console.log(suflCards);
+    /*suflCards.map((emodji, index) =>({
           id: index,
-          emodji,
+          emodji: cardPairs[index],
           flipped:false
-        }));
+        }));*/
+    console.log(suflCards);
 
     setCards(suflCards);
     setFlips(0);
@@ -72,22 +75,24 @@ function App() {
 
   const checkForMatch = (flippedCards) => {
     const [first, second] = flippedCards;
-    const card1 = cards.find(card => card.id === first);
-    const card2 = cards.find(card => card.id === second);
+    //const card1 = cards.find(card => card.id === first);
+    //const card2 = cards.find(card => card.id === second);
+    console.log(first)
+    console.log(second)
 
-    if (card1.emodji === card2.emodji){
+    if (first === second){
       setSolved([...solved, first, second]);
       setFlipped([]);
       setDisabled(false);
 
-      matchAudio.play();
+      //matchAudio.play();
     }
     else{
       setTimeout(() => {
         setFlipped([]);
         setDisabled(false);
       }, 1000);
-      mismatchAudio.play();
+      //mismatchAudio.play();
     }
   }
 
@@ -100,7 +105,7 @@ function App() {
           <p>Размер сетки</p>
           <select
               value={gridSize}
-              onChange={(e) => setGridSize(e.target.value)}
+              onChange={(e) => setGridSize(Number(e.target.value))}
 
           >
             <option value='4'>4x4</option>
@@ -118,11 +123,12 @@ function App() {
           <p>Найдено пар: {solved.length / 2} из {(gridSize * gridSize) / 2}</p>
         </div>
 
-        <div className='game-section' style={{gridTemplateColumns: `repeat(${gridSize}), 1fr`}}>
+        <div className='game-section' style={{gridTemplateColumns: `repeat(${gridSize}, 1fr)`}}>
           {cards.map(card => (
               <div onClick={handleCardClick} key={card.id} className={`card ${flipped.includes(card.id) || solved.includes(card.id) ? 'flipped' : ''}`}>
-                {flipped.includes(card.id) || solved.includes(card.id) ? card.emodji : '?'}
+                {flipped.includes(card.id) || solved.includes(card.id) ? card : card}
               </div>
+
           ))}
         </div>
       </div>
