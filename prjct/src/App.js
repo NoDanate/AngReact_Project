@@ -1,8 +1,10 @@
-import React, {useState} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import './App.css';
+import mismatch from "./hitsound_2.mp3"
+import match from "./super-mario-64-yahoo-sound.mp3"
 
-const matchAudio = new Audio('');
-const mismatchAudio = new Audio('');
+const matchAudio = new Audio(match);
+const mismatchAudio = new Audio(mismatch);
 
 function App() {
   const cardEmojies = [
@@ -42,13 +44,13 @@ function App() {
     const cardPairs = [...selectedEmoji, ...selectedEmoji];
     console.log(cardPairs);
     const suflCards = cardPairs
-        .sort(() =>Math.random() - 0.5);
-    console.log(suflCards);
-    /*suflCards.map((emodji, index) =>({
+        .sort(() => Math.random() - 0.5)
+        .map((emoji, index) => ({
           id: index,
-          emodji: cardPairs[index],
-          flipped:false
-        }));*/
+          emoji,
+          flipped: false
+        }));
+
     console.log(suflCards);
 
     setCards(suflCards);
@@ -60,11 +62,13 @@ function App() {
   }
 
   const handleCardClick = (id) => {
+    console.log('id:' + id)
     if(disabled || flipped.includes(id) || solved.includes(id) || !gameStarted) return;
-
+    console.log(flipped)
     const newFlipped = [...flipped, id];
     setFlipped(newFlipped);
-
+    console.log(newFlipped);
+    console.log(flipped)
     setFlips(flips + 1);
 
     if (newFlipped.length === 2){
@@ -75,26 +79,37 @@ function App() {
 
   const checkForMatch = (flippedCards) => {
     const [first, second] = flippedCards;
-    //const card1 = cards.find(card => card.id === first);
-    //const card2 = cards.find(card => card.id === second);
-    console.log(first)
-    console.log(second)
+    const card1 = cards.find(card => card.id === first);
+    const card2 = cards.find(card => card.id === second);
+    console.log(card1)
+    console.log(card2)
 
-    if (first === second){
+    if (card1.emoji === card2.emoji){
       setSolved([...solved, first, second]);
       setFlipped([]);
       setDisabled(false);
 
-      //matchAudio.play();
+      matchAudio.play();
     }
     else{
       setTimeout(() => {
         setFlipped([]);
         setDisabled(false);
       }, 1000);
-      //mismatchAudio.play();
+      mismatchAudio.play();
     }
   }
+
+  useEffect(() => {
+    let timer;
+    if(gameStarted && solved.length<cards.length){
+      timer = setInterval(() => {
+        setGameTime(gameTime => gameTime + 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [gameStarted, solved, cards]
+  )
 
 
 
@@ -118,15 +133,15 @@ function App() {
         <button onClick={''}>Выйти</button>
 
         <div className='game-stats'>
-          <p>Время: </p>
+          <p>Время: {gameTime} ceк</p>
           <p>Количество переворотов: {flips}</p>
           <p>Найдено пар: {solved.length / 2} из {(gridSize * gridSize) / 2}</p>
         </div>
 
-        <div className='game-section' style={{gridTemplateColumns: `repeat(${gridSize}, 1fr)`}}>
+        <div className='game-section' style={{display:"grid", gridTemplateColumns: `repeat(${gridSize}, 1fr)`}}>
           {cards.map(card => (
-              <div onClick={handleCardClick} key={card.id} className={`card ${flipped.includes(card.id) || solved.includes(card.id) ? 'flipped' : ''}`}>
-                {flipped.includes(card.id) || solved.includes(card.id) ? card : card}
+              <div onClick = {() => handleCardClick(card.id)} key={card.id}  className={`card ${flipped.includes(card.id) || solved.includes(card.id) ? 'flipped' : ''}`}>
+                {flipped.includes(card.id) || solved.includes(card.id) ? card.emoji : '?'}
               </div>
 
           ))}
