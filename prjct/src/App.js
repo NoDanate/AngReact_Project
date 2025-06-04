@@ -114,28 +114,12 @@ function App() {
 
 
   return (
-      <div className='memory-game'>
+      <div className={`memory-game ${darkMode ? 'dark' : 'light'}`}>
+        <section className="center">
+        <div className="game-header">
         <h1>Игра Память</h1>
-        <div>
-          <p>Размер сетки</p>
-          <select
-              value={gridSize}
-              onChange={(e) => setGridSize(Number(e.target.value))}
 
-          >
-            <option value='4'>4x4</option>
-            <option value='6'>6x6</option>
-          </select>
-        </div>
-        <button onClick={initGame}>
-          {gameStarted ? 'Игра начата' : 'Начать игру'}
-        </button>
-        <button onClick={''}>Выйти</button>
-
-        <div className='game-stats'>
-          <p>Время: {gameTime} ceк</p>
-          <p>Количество переворотов: {flips}</p>
-          <p>Найдено пар: {solved.length / 2} из {(gridSize * gridSize) / 2}</p>
+        <button onClick={() => setDark(!darkMode)}>{darkMode ? 'dark' : 'light'}</button>
         </div>
 
         <div className='game-section' style={{display:"grid", gridTemplateColumns: `repeat(${gridSize}, 1fr)`}}>
@@ -152,19 +136,48 @@ function App() {
           <p>Вы завершили игру за {gameTime} секунд и {flips} ходов!</p>
           <button onClick={initGame}>Играть снова</button>
         </div>)}
+        </section>
 
+        <section className="left">
+          <div className="game-controls">
+            <div>
+              <p>Размер сетки</p>
+              <select
+                  value={gridSize}
+                  onChange={(e) => setGridSize(Number(e.target.value))}
+
+              >
+                <option value='4'>4x4</option>
+                <option value='6'>6x6</option>
+              </select>
+            </div>
+            <button onClick={initGame}>
+              {gameStarted ? 'Игра начата' : 'Начать игру'}
+            </button>
+            <button onClick={''}>Выйти</button>
+          </div>
+
+          <div className='game-stats'>
+            <p>Время: {gameTime} ceк</p>
+            <p>Количество переворотов: {flips}</p>
+            <p>Найдено пар: {solved.length / 2} из {(gridSize * gridSize) / 2}</p>
+          </div>
+        </section>
+
+
+
+
+        <section className="right">
         <div className="high-scores">
           <h3>Best scores:</h3>
           <table>
-            <thead>
-
+              <tbody>
+              <tr>
                 <th>Player</th>
                 <th>Time</th>
                 <th>Flips</th>
                 <th>Size</th>
-
-            </thead>
-            <tbody>
+              </tr>
               <tr>
                 <td>
                   someone4el
@@ -177,9 +190,10 @@ function App() {
                 </td>
                 <td>4x4</td>
               </tr>
-            </tbody>
+              </tbody>
           </table>
         </div>
+        </section>
       </div>
   );
 }
