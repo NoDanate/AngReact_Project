@@ -31,7 +31,7 @@ function App() {
 
   const [logedIn, setLog] = useState(false);
 
-  const [username, SetUsername] = useState('');
+  const [username, SetUsername] = useState('visitor');
   const [password, setPassword] = useState('');
 
   const [gameTime, setGameTime] = useState(0);
@@ -107,7 +107,7 @@ function App() {
         setGameTime(gameTime => gameTime + 1);
       }, 1000);
     }
-    return () => clearInterval(timer);
+      return () => clearInterval(timer);
   }, [gameStarted, solved, cards]
   )
 
@@ -143,8 +143,42 @@ function App() {
               <div onClick = {() => handleCardClick(card.id)} key={card.id}  className={`card ${flipped.includes(card.id) || solved.includes(card.id) ? 'flipped' : ''}`}>
                 {flipped.includes(card.id) || solved.includes(card.id) ? card.emoji : '?'}
               </div>
-
           ))}
+        </div>
+
+        {solved.length === cards.length && cards.length !== 0 &&(
+            <div className="GameOver">
+          <h2>Поздравляем, {username}!</h2>
+          <p>Вы завершили игру за {gameTime} секунд и {flips} ходов!</p>
+          <button onClick={initGame}>Играть снова</button>
+        </div>)}
+
+        <div className="high-scores">
+          <h3>Best scores:</h3>
+          <table>
+            <thead>
+
+                <th>Player</th>
+                <th>Time</th>
+                <th>Flips</th>
+                <th>Size</th>
+
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  someone4el
+                </td>
+                <td>
+                  24
+                </td>
+                <td>
+                  24
+                </td>
+                <td>4x4</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
   );
