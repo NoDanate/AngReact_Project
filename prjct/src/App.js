@@ -100,6 +100,10 @@ function App() {
     }
   }
 
+  const handleLogOut = () => {
+
+  }
+
   useEffect(() => {
     let timer;
     if(gameStarted && solved.length<cards.length){
@@ -115,23 +119,25 @@ function App() {
 
   return (
       <div className={`memory-game ${darkMode ? 'dark' : 'light'}`}>
+
+
         <section className="center">
-        <div className="game-header">
+        <div className="game-header" style={{border:"solid 2px mediumpurple"}}>
         <h1>Игра Память</h1>
 
         <button onClick={() => setDark(!darkMode)}>{darkMode ? 'dark' : 'light'}</button>
         </div>
 
-        <div className='game-section' style={{display:"grid", gridTemplateColumns: `repeat(${gridSize}, 1fr)`}}>
+        <div className='game-section' style={{display:"grid", gridTemplateColumns: `repeat(${gridSize}, 1fr)`, gridTemplateRows: `repeat(${gridSize}, 1fr)`}}>
           {cards.map(card => (
-              <div onClick = {() => handleCardClick(card.id)} key={card.id}  className={`card ${flipped.includes(card.id) || solved.includes(card.id) ? 'flipped' : ''}`}>
+              <div style={{border:"solid 2px mediumpurple", textAlign:"center"}} onClick = {() => handleCardClick(card.id)} key={card.id}  className={`card ${flipped.includes(card.id) || solved.includes(card.id) ? 'flipped' : ''}`}>
                 {flipped.includes(card.id) || solved.includes(card.id) ? card.emoji : '?'}
               </div>
           ))}
         </div>
 
         {solved.length === cards.length && cards.length !== 0 &&(
-            <div className="GameOver">
+            <div className="GameOver" style={{border:"solid 2px mediumpurple"}}>
           <h2>Поздравляем, {username}!</h2>
           <p>Вы завершили игру за {gameTime} секунд и {flips} ходов!</p>
           <button onClick={initGame}>Играть снова</button>
@@ -139,7 +145,7 @@ function App() {
         </section>
 
         <section className="left">
-          <div className="game-controls">
+          <div className="game-controls" style={{border:"solid 2px mediumpurple"}}>
             <div>
               <p>Размер сетки</p>
               <select
@@ -154,10 +160,10 @@ function App() {
             <button onClick={initGame}>
               {gameStarted ? 'Игра начата' : 'Начать игру'}
             </button>
-            <button onClick={''}>Выйти</button>
+            <button onClick={handleLogOut}>Выйти</button>
           </div>
 
-          <div className='game-stats'>
+          <div className='game-stats' style={{border:"solid 2px mediumpurple"}}>
             <p>Время: {gameTime} ceк</p>
             <p>Количество переворотов: {flips}</p>
             <p>Найдено пар: {solved.length / 2} из {(gridSize * gridSize) / 2}</p>
@@ -168,7 +174,7 @@ function App() {
 
 
         <section className="right">
-        <div className="high-scores">
+        <div className="high-scores" style={{border:"solid 2px mediumpurple"}}>
           <h3>Best scores:</h3>
           <table>
               <tbody>
